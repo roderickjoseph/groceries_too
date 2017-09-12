@@ -1,0 +1,22 @@
+language: ruby
+
+env:
+   - DB=postgresql
+
+script:
+- RAILS_ENV=test bundle exec rake --trace db:create
+- RAILS_ENV=test bundle exec rake --trace db:migrate
+- bundle exec rake db:test:prepare
+- bundle exec rspec spec/
+- bundle exec rubocop --config .rubocop.yml
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: DiAhTgV/wucqBdhacCYHT2QthL76xq0xS934ABswro+nAlzKZXgfOCHoZ7oaRxPzFlsiVCOXOJBHSh3OPJ7ysAFkmJURScD7CA9noM80uAhbmB2Rr7dzNSVAMSe9hjv3Iwcz88clpK2t+R3q3ooSyJ4kFi8Fym7pipB0lbvA6XDHk1u6vZf2lTZNFHDJd1lAGE6mnaCRc6K8f7lq+pRMBISCy0L1t4gn846im/ox8P+JMDbTD14SE5AIUxPhkylJ2LOA1e+D4kfwzlxPB9yYXlDNz01cK7JOu5lXeZvR6NwUdwYvBW4IszEq2y5UCtJboOu0enF4VMAKVTyNWxW3ONzOzVSfnllfPjr2q+86bO1sFdlPYo39BsUAoFerrJmH/1eyazTiWmJAlEgFoIYS8gc7niA5IFwAzfoFVTr1BH+mH1NViVGHXbPx6gQ8LLPDmdhby3yV8QaB/17awLehu2WWHHe+U+dOQfUDJ0xUjEJzELXdtw1yupbbOmv19bwI/9RmnAE6Wx/dLLhU5UpZg+4zCTnmGhGPtj3fvGK4XJpAxJigMKLHC9kwS/Jol95ZTAbzleEwmAz9bmu9jgzqlQ///voljn/boKuYhpoUxbJNksFOKnhmLD+MQpQdHBuPoZfkCL4PxykrwlXHnWZw5hFazizSAzSAxUvSPHkfEQM=
+  app: groceries-too
+  on:
+    repo: roderickjoseph/groceries_too
+  run:
+    - "rake db:migrate"
+    - restart
