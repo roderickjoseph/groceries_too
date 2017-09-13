@@ -3,4 +3,4 @@
 https://trello.com/b/86eEx0oj
 
 
-[![Trello](https://github.com/roderickjoseph/groceries_too/app/assets/images/trello-logo/trello-logo-blue.svg)](https://trello.com/b/86eEx0oj)
+![Trello](https://github.com/roderickjoseph/groceries_too/app/assets/images/trello-logo/trello-logo-blue.svg)
