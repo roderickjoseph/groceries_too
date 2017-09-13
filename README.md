@@ -3,4 +3,4 @@
 
 
 
-![alt](app/assets/images/trello-logo/trello-logo-blue.png)(https://trello.com/b/86eEx0oj)
+[![alt](app/assets/images/trello-logo/trello-logo-blue.png)][https://trello.com/b/86eEx0oj]
