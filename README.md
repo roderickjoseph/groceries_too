@@ -1,24 +1,6 @@
-# README
+[![Build Status](https://travis-ci.org/roderickjoseph/groceries_too.svg?branch=master)](https://travis-ci.org/roderickjoseph/groceries_too)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+https://trello.com/b/86eEx0oj
 
-Things you may want to cover:
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[![Trello](https://github.com/roderickjoseph/groceries_too/app/assets/images/trello-logo/trello-logo-blue.png)](https://trello.com/b/86eEx0oj)
