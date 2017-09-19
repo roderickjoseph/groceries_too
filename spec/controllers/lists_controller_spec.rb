@@ -14,13 +14,15 @@ RSpec.describe ListsController, type: :controller do
     end
   end
   describe 'lists#create' do
-    it 'creates new list and directs user to root' do
-      post :create, params: { list: { name: 'first_name', date: Date.new(2017, 9, 16) } }
+    let!(:list) { FactoryGirl.create(:list) }
+    it 'directs user to root' do
+      post :create, params: { list: FactoryGirl.attributes_for(:list) }
       expect(response).to redirect_to(root_path)
-
-      list = List.last
-      expect(list.name).to eq('first_name')
-      expect(list).to eq('2017-09-16')
+    end
+    it 'creates list' do
+      last_list = List.last
+      expect(last_list.name).to eq('list_name')
+      expect(last_list.date).to eq(Time.zone.today)
     end
   end
 end

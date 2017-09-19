@@ -1,10 +1,10 @@
 class ListsController < ApplicationController
-
   def new
     @list = List.new
   end
 
   def index
+    @lists = List.all
   end
 
   def create
@@ -12,9 +12,13 @@ class ListsController < ApplicationController
     redirect_to root_path
   end
 
+  def show
+    @list = List.find(params[:id])
+  end
+
   private
 
   def list_params
-    params.require(:list).permit(:name)
+    params.require(:list).permit(:name, :date)
   end
 end
