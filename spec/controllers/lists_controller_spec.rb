@@ -12,23 +12,22 @@ RSpec.describe ListsController, type: :controller do
   end
   describe 'lists#new' do
     context 'user is logged in' do
-      it 'shows new form for list' do
-        # sign_in user
+      it 'responds success' do
+        sign_in user
         get :new
         expect(response).to have_http_status(:success)
-          .and redirect_to(new_list_path)
       end
     end
     context 'user is NOT logged in' do
       it 'redirects to login page' do
         get :new
-        expect(response).to have_http_status(:forbidden)
-          .and redirect_to(new_user_session_path)
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end
   describe 'lists#create' do
     it 'directs user to root' do
+      sign_in user
       post :create, params: { list: FactoryGirl.attributes_for(:list) }
       expect(response).to redirect_to(root_path)
     end

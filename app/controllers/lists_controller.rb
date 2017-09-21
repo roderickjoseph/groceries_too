@@ -1,5 +1,7 @@
 class ListsController < ApplicationController
+
   def new
+    redirect_to new_user_session_path unless user_signed_in?
     @list = List.new
   end
 
@@ -8,6 +10,7 @@ class ListsController < ApplicationController
   end
 
   def create
+    redirect_to new_user_session_path && return unless user_signed_in?
     @list = List.create(list_params)
     redirect_to root_path
   end
