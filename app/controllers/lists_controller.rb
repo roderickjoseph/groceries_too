@@ -22,6 +22,12 @@ class ListsController < ApplicationController
     redirect_to root_path
   end
 
+  def update
+    @list = List.find(params[:id])
+    # byebug
+    @list.update(list_params)
+  end
+
   private
 
   def list_params

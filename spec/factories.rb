@@ -8,6 +8,8 @@ FactoryGirl.define do
   end
 
   factory :list do
+    association :user
+    
     name 'list_name'
     date Time.zone.today
   end

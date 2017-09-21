@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ListsController, type: :controller do
   let!(:list) { FactoryGirl.create(:list) }
+  let!(:user) { FactoryGirl.create(:user) }
 
   describe 'lists#index' do
     it 'shows lists index page' do
@@ -10,9 +11,20 @@ RSpec.describe ListsController, type: :controller do
     end
   end
   describe 'lists#new' do
-    it 'shows new form for list' do
-      get :new
-      expect(response).to have_http_status(:success)
+    context 'user is logged in' do
+      it 'shows new form for list' do
+        # sign_in user
+        get :new
+        expect(response).to have_http_status(:success)
+          .and redirect_to(new_list_path)
+      end
+    end
+    context 'user is NOT logged in' do
+      it 'redirects to login page' do
+        get :new
+        expect(response).to have_http_status(:forbidden)
+          .and redirect_to(new_user_session_path)
+      end
     end
   end
   describe 'lists#create' do
@@ -36,6 +48,13 @@ RSpec.describe ListsController, type: :controller do
     it 'deletes list' do
       delete :destroy, params: { id: list.id }
       expect { List.find(list.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+  describe 'lists#update' do
+    it 'updates the list' do
+      put :update, params: { id: list.id, list: { name: 'changed_name', date: Time.zone.today } }
+      list.reload
+      expect(list.name).to eq('changed_name')
     end
   end
 end
