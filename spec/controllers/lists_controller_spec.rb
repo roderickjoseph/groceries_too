@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe ListsController, type: :controller do
-  let!(:list) { FactoryGirl.create(:list) }
-  let!(:user) { FactoryGirl.create(:user) }
+  let(:list) { FactoryGirl.create(:list) }
+  let(:user) { FactoryGirl.create(:user) }
 
   describe 'lists#index' do
     it 'shows lists index page' do
@@ -26,15 +26,39 @@ RSpec.describe ListsController, type: :controller do
     end
   end
   describe 'lists#create' do
-    it 'directs user to root' do
-      sign_in user
-      post :create, params: { list: FactoryGirl.attributes_for(:list) }
-      expect(response).to redirect_to(root_path)
+    context 'user logged in' do
+      it 'directs user to root' do
+        sign_in user
+        post :create, params: { list: FactoryGirl.attributes_for(:list) }
+        expect(response).to redirect_to(root_path)
+      end
+      it 'creates list' do
+        sign_in user
+        post :create, params: { list: FactoryGirl.attributes_for(:list) }
+        expect().to eq('list_name')
+      end
     end
-    it 'creates list' do
-      last_list = List.last
-      expect(last_list.name).to eq('list_name')
-      expect(last_list.date).to eq(Time.zone.today)
+    context 'user NOT logged in' do
+      it 'directs user to sign in path' do
+        post :create, params: { list: FactoryGirl.attributes_for(:list) }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+      it 'does NOT create list' do
+        # byebug
+        list_count = List.count
+        post :create, params: { list: FactoryGirl.attributes_for(:list) }
+        list.reload
+        expect(List.count).to eq(list_count)
+      end
+    end
+    context 'missing list name' do
+      it 'asks for valid name and does NOT create a list' do
+        sign_in user
+        list_count = List.count
+        post :create, params: { list: { name: '', date: Time.zone.today } }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(List.count).to eq(list_count)
+      end
     end
   end
   describe 'lists#show' do
