@@ -35,19 +35,17 @@ RSpec.describe ListsController, type: :controller do
       it 'creates list' do
         sign_in user
         post :create, params: { list: FactoryGirl.attributes_for(:list) }
-        expect().to eq('list_name')
+        expect(List.last.name).to eq('list_name')
       end
     end
     context 'user NOT logged in' do
-      it 'directs user to sign in path' do
+      it 'directs user to sign in page' do
         post :create, params: { list: FactoryGirl.attributes_for(:list) }
         expect(response).to redirect_to(new_user_session_path)
       end
-      it 'does NOT create list' do
-        # byebug
+      it 'does NOT create a list' do
         list_count = List.count
         post :create, params: { list: FactoryGirl.attributes_for(:list) }
-        list.reload
         expect(List.count).to eq(list_count)
       end
     end
@@ -68,9 +66,14 @@ RSpec.describe ListsController, type: :controller do
     end
   end
   describe 'lists#destroy' do
-    it 'deletes list' do
-      delete :destroy, params: { id: list.id }
-      expect { List.find(list.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    context 'user logged in' do
+      it 'deletes list' do
+        # byebug
+        sign_in user
+        # list
+        delete :destroy, params: { id: list.id }
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
   describe 'lists#update' do
