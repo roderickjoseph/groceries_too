@@ -3,10 +3,10 @@ AllCops:
     - db/**/*
     - Gemfile
     - vendor/**/*
-    - config/environments/*
     - bin/**/*
     - app/helpers/*
     - config/*
+    - config/**/*
     - spec/*_helper.rb
 
 Rails:
