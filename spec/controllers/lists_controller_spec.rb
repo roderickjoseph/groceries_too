@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ListsController, type: :controller do
-  let(:list) { FactoryGirl.create(:list) }
+  let!(:list) { FactoryGirl.create(:list) }
   let(:user) { FactoryGirl.create(:user) }
 
   describe 'lists#index' do
@@ -68,16 +68,28 @@ RSpec.describe ListsController, type: :controller do
   describe 'lists#destroy' do
     context 'user logged in' do
       it 'deletes list' do
-        # byebug
-        sign_in user
-        # list
+        sign_in list.user
         delete :destroy, params: { id: list.id }
+        expect(response).to redirect_to(root_path)
+      end
+      it 'returns 404 if specified list does not exist' do
+        sign_in user
+        delete :destroy, params: { id: 'bad_id' }
         expect(response).to have_http_status(:not_found)
+      end
+    end
+    context "list is NOT the logged in user's list" do
+      let(:user2) { FactoryGirl.create(:user2) }
+      it 'warns user: not their list' do
+        sign_in user2
+        delete :destroy, params: { id: list.id }
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
   describe 'lists#update' do
     it 'updates the list' do
+      sign_in list.user
       put :update, params: { id: list.id, list: { name: 'changed_name', date: Time.zone.today } }
       list.reload
       expect(list.name).to eq('changed_name')

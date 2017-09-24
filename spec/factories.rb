@@ -7,6 +7,14 @@ FactoryGirl.define do
     password_confirmation 'secretPassword'
   end
 
+  factory :user2, class: User do
+    sequence :email do |n|
+      "dummyEmail#{n}@gmail.com"
+    end
+    password 'secretPassword'
+    password_confirmation 'secretPassword'
+  end
+
   factory :list do
     association :user
 
