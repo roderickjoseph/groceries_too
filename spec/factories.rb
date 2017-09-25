@@ -21,4 +21,11 @@ FactoryGirl.define do
     name 'list_name'
     date Time.zone.today
   end
+
+  factory :item do
+    association :user
+    association :list
+
+    name 'item_name'
+  end
 end

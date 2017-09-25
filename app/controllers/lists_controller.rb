@@ -1,5 +1,5 @@
 class ListsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create destroy update]
+  before_action :authenticate_user!, only: %i[new create destroy update edit]
 
   def new
     @list = List.new
