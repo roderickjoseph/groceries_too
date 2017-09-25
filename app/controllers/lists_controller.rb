@@ -25,12 +25,23 @@ class ListsController < ApplicationController
 
   def edit
     @list = List.find_by(id: params[:id])
-    return render :not_found if @list.blank?
-    return render :forbidden unless @list.user == current_user
+
+    return redirect_to(new_user_session_path) unless current_user
+
+    if @list.blank?
+      flash[:alert] = 'List  not found'
+      return render :index, status: :not_found
+    elsif current_user != @list.user
+      flash[:alert] = 'Cannot modify this list'
+      return render :show, status: :forbidden
+    end
+    redirect_to(edit_list_path)
   end
 
   def update
     @list = List.find_by(id: params[:id])
+
+    return redirect_to(new_user_session_path) unless current_user
 
     if @list.blank?
       flash[:alert] = 'List  not found'
