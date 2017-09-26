@@ -44,7 +44,7 @@ class ListsController < ApplicationController
     return redirect_to(new_user_session_path) unless current_user
 
     if @list.blank?
-      flash[:alert] = 'List  not found'
+      flash[:alert] = 'List not found'
       return render :index, status: :not_found
     elsif current_user != @list.user
       flash[:alert] = 'Cannot modify this list'

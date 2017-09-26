@@ -42,6 +42,27 @@ class ItemsController < ApplicationController
     end
   end
 
+  def update
+    @list = List.find_by(id: params[:list_id])
+
+    return redirect_to(new_user_session_path) unless current_user
+
+    if @list.blank?
+      flash[:alert] = 'List not found'
+      return render :index, status: :not_found
+    elsif current_user != @list.user
+      flash[:alert] = 'Cannot modify this list'
+      return render :show, status: :forbidden
+    else
+      @list.items.update(item_params)
+      unless @list.valid?
+        flash[:alert] = 'Name cannot be empty'
+        return render :edit, status: :unprocessable_entity
+      end
+    end
+    redirect_to root_path
+  end
+
   private
 
   def current_list

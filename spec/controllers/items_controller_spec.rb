@@ -8,7 +8,7 @@ RSpec.describe ItemsController, type: :controller do
 
   describe 'item#create' do
     context 'when user logged in' do
-      context 'list belongs to user' do
+      context 'and list belongs to user' do
         it 'creates an item' do
           sign_in list.user
           expect { post :create, params: { list_id: list.id, item: FactoryGirl.attributes_for(:item) } }.to change(Item, :count).by(1)
@@ -19,7 +19,7 @@ RSpec.describe ItemsController, type: :controller do
           expect(response).to redirect_to list_path(list.id)
         end
       end
-      context 'list does NOT belong to user' do
+      context 'but list does NOT belong to user' do
         let(:user2) { FactoryGirl.create(:user2) }
         it 'warns user CANNOT add item' do
           sign_in user2
@@ -27,7 +27,7 @@ RSpec.describe ItemsController, type: :controller do
           expect(response).to have_http_status(:forbidden)
         end
       end
-      context 'list does NOT exist' do
+      context 'but list does NOT exist' do
         it 'returns 404' do
           sign_in user
           post :create, params: { list_id: 'bad_id', item: FactoryGirl.attributes_for(:item) }
@@ -35,7 +35,7 @@ RSpec.describe ItemsController, type: :controller do
         end
       end
     end
-    context 'user NOT logged in' do
+    context 'when user NOT logged in' do
       it 'does NOT add item' do
         expect { post :create, params: { list_id: list.id, item: FactoryGirl.attributes_for(:item) } }.to_not change(Item, :count)
       end
@@ -72,7 +72,7 @@ RSpec.describe ItemsController, type: :controller do
   end
 
   describe 'item#edit' do
-    context 'user is logged in' do
+    context 'when user is logged in' do
       context 'and list belongs to user' do
         it 'redirects to edit page' do
           sign_in list.user
@@ -88,9 +88,39 @@ RSpec.describe ItemsController, type: :controller do
         end
       end
     end
-    context 'user is NOT logged in' do
+    context 'when user is NOT logged in' do
       it 'redirects to log in page' do
         get :edit, params: { id: item.id, list_id: list.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
+  describe 'item#update' do
+    context 'when user is logged in' do
+      context 'and list belongs to user' do
+        it 'updates the item' do
+          sign_in list.user
+          put :update, params: { name: 'changed_item_name', id: item.id, list_id: list.id }
+          item.reload
+          expect(item.name).to eq('changed_item_name')
+        end
+      end
+      context 'and list does NOT belong to user' do
+        it 'warns CANNOT edit item' do
+          sign_in user2
+          put :update, params: { name: 'changed_item_name', id: item.id, list_id: list.id }
+          expect(response).to have_http_status(:forbidden)
+        end
+        it 'does NOT update item' do
+          sign_in user2
+          expect { put :update, params: { name: 'changed_item_name', id: item.id, list_id: list.id } }.not_to change(item, :name)
+        end
+      end
+    end
+    context 'when user is NOT logged in' do
+      it 'redirects to log in page' do
+        put :update, params: { name: 'changed_item_name', id: item.id, list_id: list.id }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
