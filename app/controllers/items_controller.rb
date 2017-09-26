@@ -43,16 +43,20 @@ class ItemsController < ApplicationController
   end
 
   def update
+    # byebug
     @list = List.find_by(id: params[:list_id])
-
+    @item = @list.items.find_by(id: params[:id])
     return redirect_to(new_user_session_path) unless current_user
 
     if @list.blank?
       flash[:alert] = 'List not found'
       return render :index, status: :not_found
+    elsif @item.blank?
+      flash[:alert] = 'Item not found'
+      return render 'lists/show', status: :not_found
     elsif current_user != @list.user
       flash[:alert] = 'Cannot modify this list'
-      return render :show, status: :forbidden
+      return render 'lists/show', status: :forbidden
     else
       @list.items.update(item_params)
       unless @list.valid?
@@ -60,18 +64,10 @@ class ItemsController < ApplicationController
         return render :edit, status: :unprocessable_entity
       end
     end
-    redirect_to root_path
+    redirect_to list_path(@list.id)
   end
 
   private
-
-  def current_list
-    if params[:list_id]
-      @current_list ||= List.find(params[:list_id])
-    else
-      current_item.list
-    end
-  end
 
   def item_params
     params.require(:item).permit(:name)

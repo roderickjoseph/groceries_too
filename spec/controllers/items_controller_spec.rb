@@ -101,6 +101,8 @@ RSpec.describe ItemsController, type: :controller do
       context 'and list belongs to user' do
         it 'updates the item' do
           sign_in list.user
+          # byebug
+          list.items.create(name: 'item_Name')
           put :update, params: { name: 'changed_item_name', id: item.id, list_id: list.id }
           item.reload
           expect(item.name).to eq('changed_item_name')
