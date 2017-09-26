@@ -15,7 +15,7 @@ RSpec.describe ItemsController, type: :controller do
         it 'redirects to list show page' do
           sign_in list.user
           post :create, params: { list_id: list.id, item: FactoryGirl.attributes_for(:item) }
-          expect(response).to redirect_to(list_url(item.list))
+          expect(response).to redirect_to list_path(list.id)
         end
       end
       context 'list does NOT belong to user' do

@@ -9,7 +9,7 @@ FactoryGirl.define do
 
   factory :user2, class: User do
     sequence :email do |n|
-      "dummyEmail#{n}@gmail.com"
+      "secondDummyEmail#{n}@gmail.com"
     end
     password 'secretPassword'
     password_confirmation 'secretPassword'
