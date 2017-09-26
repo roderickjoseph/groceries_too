@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe ItemsController, type: :controller do
   let(:list) { FactoryGirl.create(:list) }
   let(:user) { FactoryGirl.create(:user) }
+  let(:user2) { FactoryGirl.create(:user2) }
   let(:item) { FactoryGirl.create(:item) }
 
   describe 'item#create' do
@@ -40,6 +41,31 @@ RSpec.describe ItemsController, type: :controller do
       end
       it 'redirects to sign in page' do
         post :create, params: { list_id: list.id, item: FactoryGirl.attributes_for(:item) }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
+  describe 'item#new' do
+    context 'when user is logged in' do
+      context 'and list belongs to user' do
+        it 'responds success' do
+          sign_in list.user
+          get :new, params: { list_id: list.id }
+          expect(response).to have_http_status(:success)
+        end
+      end
+      context 'and list does NOT belong to user' do
+        it 'warns CANNOT add item to list' do
+          sign_in user2
+          get :new, params: { list_id: list.id }
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+    end
+    context 'when user is NOT logged in' do
+      it 'redirects to login page' do
+        get :new, params: { list_id: list.id }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
