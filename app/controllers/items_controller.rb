@@ -14,6 +14,19 @@ class ItemsController < ApplicationController
     end
   end
 
+  def edit
+    @list = List.find_by(id: params[:list_id])
+    if !current_user
+      flash[:alert] = 'You must log in to edit an item'
+      redirect_to(new_user_session_path)
+    elsif current_user != @list.user
+      flash[:alert] = "Cannot edit item of another's list"
+      render 'lists/show', status: :forbidden
+    else
+      redirect_to(edit_list_item_path)
+    end
+  end
+
   def create
     @list = List.find_by(id: params[:list_id])
 

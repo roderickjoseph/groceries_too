@@ -70,4 +70,29 @@ RSpec.describe ItemsController, type: :controller do
       end
     end
   end
+
+  describe 'item#edit' do
+    context 'user is logged in' do
+      context 'and list belongs to user' do
+        it 'redirects to edit page' do
+          sign_in list.user
+          get :edit, params: { id: item.id, list_id: list.id }
+          expect(response).to redirect_to(edit_list_item_path)
+        end
+      end
+      context 'and list does NOT belong to user' do
+        it 'warns CANNOT edit item' do
+          sign_in user2
+          get :edit, params: { id: item.id, list_id: list.id }
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+    end
+    context 'user is NOT logged in' do
+      it 'redirects to log in page' do
+        get :edit, params: { id: item.id, list_id: list.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
 end
