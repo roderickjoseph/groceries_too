@@ -43,9 +43,9 @@ class ItemsController < ApplicationController
   end
 
   def update
-    # byebug
     @list = List.find_by(id: params[:list_id])
     @item = @list.items.find_by(id: params[:id])
+    byebug
     return redirect_to(new_user_session_path) unless current_user
 
     if @list.blank?
@@ -58,8 +58,8 @@ class ItemsController < ApplicationController
       flash[:alert] = 'Cannot modify this list'
       return render 'lists/show', status: :forbidden
     else
-      @list.items.update(item_params)
-      unless @list.valid?
+      @item.update(item_params)
+      unless @item.valid?
         flash[:alert] = 'Name cannot be empty'
         return render :edit, status: :unprocessable_entity
       end

@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe ListsController, type: :controller do
   let(:list) { FactoryGirl.create(:list) }
   let(:user) { FactoryGirl.create(:user) }
+  let(:user2) { FactoryGirl.create(:user) }
 
   describe 'lists#index' do
     it 'shows lists index page' do
@@ -52,7 +53,6 @@ RSpec.describe ListsController, type: :controller do
         end
       end
       context 'and list does NOT belong to user' do
-        let(:user2) { FactoryGirl.create(:user2) }
         it 'warns user CANNOT edit list' do
           sign_in user2
           get :edit, params: { id: list.id }
@@ -125,7 +125,6 @@ RSpec.describe ListsController, type: :controller do
         end
       end
       context 'and list does NOT belong to user' do
-        let(:user2) { FactoryGirl.create(:user2) }
         it 'does not update list' do
           sign_in user2
           expect { put :update, params: { id: list.id, list: { name: 'changed_name', date: Time.zone.today } } }.to_not change(list, :name)
@@ -176,7 +175,6 @@ RSpec.describe ListsController, type: :controller do
         end
       end
       context 'and list does NOT belong to user' do
-        let(:user2) { FactoryGirl.create(:user2) }
         it 'warns they CANNOT delete list' do
           sign_in user2
           delete :destroy, params: { id: list.id }
