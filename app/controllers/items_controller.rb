@@ -62,6 +62,21 @@ class ItemsController < ApplicationController
     redirect_to list_path(current_list.id)
   end
 
+  def destroy
+    @item = current_list.items.find_by(id: params[:id])
+
+    if @item.blank?
+      flash[:alert] = 'Item not found'
+      return render 'lists/show', status: :not_found
+    elsif current_user != current_list.user
+      flash[:alert] = 'Cannot delete items from this list'
+      return render 'lists/show', status: :not_found
+    else
+      @item.destroy
+      redirect_to 'lists/show'
+    end
+  end
+
   private
 
   def current_list

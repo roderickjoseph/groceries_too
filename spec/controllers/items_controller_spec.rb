@@ -141,4 +141,33 @@ RSpec.describe ItemsController, type: :controller do
       end
     end
   end
+
+  describe 'items#destroy' do
+    context 'when user is logged in' do
+      context 'and list belongs to user' do
+        it 'deletes item' do
+          sign_in list_w_items.user
+          expect { delete :destroy, params: { list_id: list_w_items.id, id: list_w_items.items.last.id } }.to change(Item, :count).by(-1)
+        end
+      end
+      context 'and list does NOT belong to user' do
+        it 'does NOT delete list' do
+          list_w_items
+          sign_in user2
+          expect { delete :destroy, params: { list_id: list_w_items.id, id: list_w_items.items.last.id } }.not_to change(Item, :count)
+        end
+      end
+    end
+    context 'when user is NOT logged in' do
+      it 'redirects to sign in page' do
+        list_w_items
+        delete :destroy, params: { list_id: list_w_items.id, id: list_w_items.items.last.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+      it 'does not delete list' do
+        list_w_items
+        expect { delete :destroy, params: { list_id: list_w_items.id, id: list_w_items.items.last.id } }.not_to change(Item, :count)
+      end
+    end
+  end
 end
