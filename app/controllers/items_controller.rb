@@ -1,11 +1,8 @@
 class ItemsController < ApplicationController
-  before_action :authenticate_user!, only: [:create]
+  before_action :authenticate_user!, only: %i[new edit update destroy create]
 
   def new
-    if !current_user
-      flash[:alert] = 'You must log in to add item'
-      redirect_to(new_user_session_path)
-    elsif current_user != current_list.user
+    if current_user != current_list.user
       flash[:alert] = "Cannot add item to another's list"
       render 'lists/show', status: :forbidden
     else
@@ -15,13 +12,12 @@ class ItemsController < ApplicationController
 
   def show
     @item = current_list.items.find_by(id: params[:id])
+
+    render 'lists/show', status: :not_found if @item.blank?
   end
 
   def edit
-    if !current_user
-      flash[:alert] = 'You must log in to edit an item'
-      redirect_to(new_user_session_path)
-    elsif current_user != current_list.user
+    if current_user != current_list.user
       flash[:alert] = "Cannot edit item of another's list"
       render 'lists/show', status: :forbidden
     else

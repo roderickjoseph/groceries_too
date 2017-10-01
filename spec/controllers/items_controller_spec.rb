@@ -6,6 +6,7 @@ RSpec.describe ItemsController, type: :controller do
   let(:user2) { FactoryGirl.create(:user) }
   let(:item) { FactoryGirl.create(:item, list: list, user: user) }
   let(:list_w_items) { FactoryGirl.create(:list, :with_items) }
+  let(:list_w_no_items) { FactoryGirl.create(:list) }
 
   describe 'item#create' do
     context 'when user logged in' do
@@ -127,21 +128,16 @@ RSpec.describe ItemsController, type: :controller do
   end
 
   describe 'items#show' do
-    context 'when user is logged in' do
+    context 'when item exists' do
       it 'shows item detail page' do
-        sign_in list_w_items.user
         get :show, params: { list_id: list_w_items.id, id: list_w_items.items.first.id }
         expect(response).to have_http_status(:success)
       end
     end
-    context 'when user is NOT logged in' do
-      it 'redirects to sign in page' do
-
-      end
-    end
-    context 'when item does not exist' do
+    context 'when does NOT exist' do
       it 'returns 404 error' do
-
+        get :show, params: { list_id: list_w_no_items.id, id: 'bad_id' }
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
