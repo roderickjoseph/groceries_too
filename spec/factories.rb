@@ -1,6 +1,5 @@
 FactoryGirl.define do
   factory :user do
-
     sequence :email do |n|
       "dummyEmail#{n}@gmail.com"
     end
@@ -20,10 +19,6 @@ FactoryGirl.define do
         create_list(:item, 3, list: list, user: list.user)
       end
     end
-
-    # after(:create) do |list, evaluator|
-    #   create_list(:list, evaluator.item_count, list: list)
-    # end
   end
 
   factory :item do
