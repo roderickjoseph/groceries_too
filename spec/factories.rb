@@ -9,13 +9,13 @@ FactoryGirl.define do
   end
 
   factory :list do
-    user
+    association :user
 
     name 'list_name'
     date Time.zone.today
 
     trait :with_items do
-      user
+      association :user
       after(:create) do |list|
         create_list(:item, 3, list: list, user: list.user)
       end
@@ -27,8 +27,8 @@ FactoryGirl.define do
   end
 
   factory :item do
-    user
-    list
+    association :user
+    association :list
 
     name 'item_name'
   end

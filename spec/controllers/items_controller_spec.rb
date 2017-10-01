@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe ItemsController, type: :controller do
-  let(:list) { FactoryGirl.create(:list) }
   let(:user) { FactoryGirl.create(:user) }
+  let(:list) { FactoryGirl.create(:list, user: user) }
   let(:user2) { FactoryGirl.create(:user) }
-  let(:item) { FactoryGirl.create(:item) }
+  let(:item) { FactoryGirl.create(:item, list: list, user: user) }
   let(:list_w_items) { FactoryGirl.create(:list, :with_items) }
 
   describe 'item#create' do
@@ -101,11 +101,9 @@ RSpec.describe ItemsController, type: :controller do
       context 'and list belongs to user' do
         it 'updates the item' do
           sign_in list_w_items.user
-
-          # list.items.create(FactoryGirl.attributes_for(:item))
-          put :update, params: { item: { name: 'changed_item_name', id: list_w_items.items.ids[0], list_id: list_w_items.id } }
-          item.reload
-          expect(item.name).to eq('changed_item_name')
+          put :update, params: { id: list_w_items.items.first.id, list_id: list_w_items.id, item: { name: 'changed_item_name' } }
+          list_w_items.reload
+          expect(list_w_items.items.first.name).to eq('changed_item_name')
         end
       end
       context 'and list does NOT belong to user' do

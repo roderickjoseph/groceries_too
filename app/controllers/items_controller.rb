@@ -45,7 +45,7 @@ class ItemsController < ApplicationController
   def update
     @list = List.find_by(id: params[:list_id])
     @item = @list.items.find_by(id: params[:id])
-    byebug
+
     return redirect_to(new_user_session_path) unless current_user
 
     if @list.blank?
