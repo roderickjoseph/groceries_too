@@ -2,7 +2,6 @@ class ItemsController < ApplicationController
   before_action :authenticate_user!, only: [:create]
 
   def new
-    current_list = List.find_by(id: params[:list_id])
     if !current_user
       flash[:alert] = 'You must log in to add item'
       redirect_to(new_user_session_path)
@@ -14,8 +13,11 @@ class ItemsController < ApplicationController
     end
   end
 
+  def show
+    @item = current_list.items.find_by(id: params[:id])
+  end
+
   def edit
-    current_list = List.find_by(id: params[:list_id])
     if !current_user
       flash[:alert] = 'You must log in to edit an item'
       redirect_to(new_user_session_path)

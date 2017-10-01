@@ -125,4 +125,24 @@ RSpec.describe ItemsController, type: :controller do
       end
     end
   end
+
+  describe 'items#show' do
+    context 'when user is logged in' do
+      it 'shows item detail page' do
+        sign_in list_w_items.user
+        get :show, params: { list_id: list_w_items.id, id: list_w_items.items.first.id }
+        expect(response).to have_http_status(:success)
+      end
+    end
+    context 'when user is NOT logged in' do
+      it 'redirects to sign in page' do
+
+      end
+    end
+    context 'when item does not exist' do
+      it 'returns 404 error' do
+
+      end
+    end
+  end
 end

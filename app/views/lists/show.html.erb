@@ -1,3 +1,8 @@
 <h1><%= @list.name %></h1>
 <span><%= @list.date %></span>
 <%= link_to 'Delete', list_path(@list), method: :delete %>
+<%= link_to 'Add item', new_list_item_path(@list) %>
+<br>
+<% @list.items.each do |item| %>
+  <%= item.name %><br>
+<% end %>
