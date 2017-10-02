@@ -17,6 +17,8 @@ class ItemsController < ApplicationController
   end
 
   def edit
+    return redirect_to(new_user_session_path) unless current_user
+
     if current_user != current_item.user
       flash[:alert] = "Cannot edit item of another's list"
       render 'lists/show', status: :forbidden

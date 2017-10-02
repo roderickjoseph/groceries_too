@@ -77,7 +77,7 @@ RSpec.describe ItemsController, type: :controller do
       context 'and list belongs to user' do
         it 'redirects to edit page' do
           sign_in list.user
-          get :edit, params: { id: item.id, list_id: list.id }
+          get :edit, params: { id: item.id }
           expect(response).to have_http_status(:success)
         end
       end
