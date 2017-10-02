@@ -35,7 +35,6 @@ class ListsController < ApplicationController
       flash[:alert] = 'Cannot modify this list'
       return render :show, status: :forbidden
     end
-    redirect_to(edit_list_path)
   end
 
   def update

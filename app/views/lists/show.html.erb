@@ -1,6 +1,7 @@
 <h1><%= @list.name %></h1>
 <span><%= @list.date %></span><br>
 <%= link_to 'Delete list', list_path(@list), method: :delete %>
+<%= link_to 'Edit list', edit_list_path(@list) %>
 <%= link_to 'Add item', new_list_item_path(@list) %>
 <br>
 <% @list.items.each do |item| %>
