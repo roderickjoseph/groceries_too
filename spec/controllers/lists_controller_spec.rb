@@ -49,7 +49,7 @@ RSpec.describe ListsController, type: :controller do
         it 'redirects to edit page' do
           sign_in list.user
           get :edit, params: { id: list.id }
-          expect(response).to redirect_to(edit_list_path)
+          expect(response).to have_http_status(:success)
         end
       end
       context 'and list does NOT belong to user' do
