@@ -11,17 +11,17 @@ class ItemsController < ApplicationController
   end
 
   def show
-    @item = current_list.items.find_by(id: params[:id])
+    @item = current_item
 
     render 'lists/show', status: :not_found if @item.blank?
   end
 
   def edit
-    if current_user != current_list.user
+    if current_user != current_item.user
       flash[:alert] = "Cannot edit item of another's list"
       render 'lists/show', status: :forbidden
     else
-      redirect_to(edit_list_item_path)
+      @item = current_item
     end
   end
 
@@ -39,17 +39,17 @@ class ItemsController < ApplicationController
   end
 
   def update
-    @item = current_list.items.find_by(id: params[:id])
+    @item = current_item
 
     return redirect_to(new_user_session_path) unless current_user
 
-    if current_list.blank?
+    if current_item.blank?
       flash[:alert] = 'List not found'
       return render :index, status: :not_found
     elsif @item.blank?
       flash[:alert] = 'Item not found'
       return render 'lists/show', status: :not_found
-    elsif current_user != current_list.user
+    elsif current_user != current_item.user
       flash[:alert] = 'Cannot modify this list'
       return render 'lists/show', status: :forbidden
     else
@@ -59,21 +59,21 @@ class ItemsController < ApplicationController
         return render :edit, status: :unprocessable_entity
       end
     end
-    redirect_to list_path(current_list.id)
+    redirect_to list_path(current_item.list_id)
   end
 
   def destroy
-    @item = current_list.items.find_by(id: params[:id])
+    @item = current_item
 
     if @item.blank?
       flash[:alert] = 'Item not found'
       return render 'lists/show', status: :not_found
-    elsif current_user != current_list.user
+    elsif current_user != current_item.user
       flash[:alert] = 'Cannot delete items from this list'
       return render 'lists/show', status: :not_found
     else
       @item.destroy
-      redirect_to 'lists/show'
+      redirect_to list_path(current_item.list_id)
     end
   end
 
@@ -81,6 +81,10 @@ class ItemsController < ApplicationController
 
   def current_list
     @current_list ||= List.find_by(id: params[:list_id])
+  end
+
+  def current_item
+    @current_item ||= Item.find_by(id: params[:id])
   end
 
   def item_params
