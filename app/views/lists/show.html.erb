@@ -1,10 +1,10 @@
 <h1><%= @list.name %></h1>
-<span><%= @list.date %></span>
+<span><%= @list.date %></span><br>
 <%= link_to 'Delete list', list_path(@list), method: :delete %>
 <%= link_to 'Add item', new_list_item_path(@list) %>
 <br>
 <% @list.items.each do |item| %>
-  <%= link_to item.name, item_path(item.id) %>
+  <%= link_to item.name, item_path(item.id) %><br>
   <%= link_to 'Edit item', edit_item_path(item.id) %>
   <%= link_to 'Delete item', item_path(item.id), method: :delete %><br>
 <% end %>
