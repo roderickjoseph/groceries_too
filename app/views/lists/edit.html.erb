@@ -1,0 +1,6 @@
+<h1><%= @list.name %> edit page</h1>
+
+<%= simple_form_for @list do |f| %>
+  <%= f.input :name %>
+  <%= f.submit 'Update' %>
+<% end %>

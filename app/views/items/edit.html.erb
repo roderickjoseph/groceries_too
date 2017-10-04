@@ -1,0 +1,6 @@
+<h1>Edit <%= @item.name %></h1>
+
+<%= simple_form_for @item do |f| %>
+  <%= f.input :name %>
+  <%= f.submit 'Update' %>
+<% end %>
