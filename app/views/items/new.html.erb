@@ -2,5 +2,6 @@
 
 <%= simple_form_for Item.new, url: list_items_path(@current_list) do |f| %>
   <%= f.input :name %>
+  <%= f.input :price %>
   <%= f.submit 'Add item' %>
 <% end %>

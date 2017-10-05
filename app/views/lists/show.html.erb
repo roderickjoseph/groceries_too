@@ -1,11 +1,12 @@
 <h1><%= @list.name %></h1>
 <span><%= @list.date %></span><br>
+<span>Count: <%= @list.count %></span><br>
 <%= link_to 'Delete list', list_path(@list), method: :delete %>
 <%= link_to 'Edit list', edit_list_path(@list) %>
 <%= link_to 'Add item', new_list_item_path(@list) %>
 <br>
 <% @list.items.each do |item| %>
-  <%= link_to item.name, item_path(item.id) %><br>
+  <%= link_to item.name, item_path(item.id) %><%= number_to_currency(item.price) %><br>
   <%= link_to 'Edit item', edit_item_path(item.id) %>
   <%= link_to 'Delete item', item_path(item.id), method: :delete %><br>
 <% end %>

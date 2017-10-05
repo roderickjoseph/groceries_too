@@ -12,6 +12,7 @@ FactoryGirl.define do
 
     name 'list_name'
     date Time.zone.today
+    count 0
 
     trait :with_items do
       association :user
@@ -26,5 +27,6 @@ FactoryGirl.define do
     association :list
 
     name 'item_name'
+    price 1.98
   end
 end
